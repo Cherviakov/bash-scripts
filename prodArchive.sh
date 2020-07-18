@@ -3,6 +3,8 @@
 TARGET=$1
 NAME=$(basename $TARGET)
 DIRNAME=$PWD
+FOLDERS_TO_REMOVE="node_modules .git coverage dist tests"
+FILES_TO_REMOVE=""
 
 if [[ ! -d "$TARGET" ]]
 then
@@ -11,25 +13,17 @@ then
 fi
 
 cp -ra $1 /tmp
-if [[ -d /tmp/$NAME/node_modules ]];then
-  rm -rf /tmp/$NAME/node_modules
-fi
+for item in $FOLDERS_TO_REMOVE;do
+  if [[ -d /tmp/$NAME/$item ]];then
+    rm -rf /tmp/$NAME/$item
+  fi
+done
 
-if [[ -d /tmp/$NAME/.git ]];then
-  rm -rf /tmp/$NAME/.git
-fi
-
-if [[ -d /tmp/$NAME/coverage ]];then
-  rm -rf /tmp/$NAME/coverage
-fi
-
-if [[ -d /tmp/$NAME/dist ]];then
-  rm -rf /tmp/$NAME/dist/*.js
-fi
-
-if [[ -d /tmp/$NAME/tests ]];then
-  rm -rf /tmp/$NAME/tests
-fi
+for item in $FILES_TO_REMOVE;do
+  if [[ -f /tmp/$NAME/$item ]];then
+    rm -rf /tmp/$NAME/$item
+  fi
+done
 
 cd /tmp
 tar -cf $NAME.tar $NAME
